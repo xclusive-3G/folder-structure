@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FiFilePlus } from "react-icons/fi";
 import { CgFolderAdd } from "react-icons/cg";
+import { MdDeleteOutline } from "react-icons/md";
 import Folder from "./Folder";
+import { fileData } from "../FileData/fileData";
 
 const Evaluation = () => {
     const [expandedFolders, setExpandedFolders] = useState([]);
@@ -10,45 +12,7 @@ const Evaluation = () => {
     const [focusedItem, setFocusedItem] = useState(null);
 
     // Initial State
-    const [data, setData] = useState([
-        {
-            id: "1",
-            name: "Documents",
-            type: "folder",
-            files: ["Document1.jpg", "Document2.jpg", "Document3.jpg"],
-        },
-        {
-            id: "2",
-            name: "Desktop",
-            type: "folder",
-            files: ["Screenshot1.jpg", "videopal.mp4"],
-        },
-        {
-            id: "3",
-            name: "Downloads",
-            type: "folder",
-            files: [
-                {
-                    id: "4",
-                    name: "Drivers",
-                    type: "folder",
-                    files: ["Printerdriver.dmg", "cameradriver.dmg"],
-                },
-                "chromedriver.dmg",
-            ],
-        },
-        {
-            id: "5",
-            name: "Applications",
-            type: "folder",
-            files: [
-                "Webstorm.dmg",
-                "Pycharm.dmg",
-                "FileZila.dmg",
-                "Mattermost.dmg",
-            ],
-        },
-    ]);
+    const [data, setData] = useState(fileData);
 
     const toggleExpand = (id) => {
         setExpandedFolders((prev) =>
@@ -58,12 +22,38 @@ const Evaluation = () => {
         );
     };
 
+    
+    // function to save edited data
     const saveEdit = () => {
-        if (editing) {
-            console.log(`Saving ${editing.type} ${editing.id} with new name: ${editValue}`);
-            setEditing(null);
-        }
+        // Ensure there's an item being edited
+        if (!editing || !editValue) return; 
+
+
+        // change the data state
+        setData((prevData) =>
+            prevData.map((item) => {
+                if (editing.type === 'folder' && item.id === editing.id) {
+                    // Edit the folder name
+                    return { ...item, name: editValue };
+                } else if (editing.type === 'file') {
+                    // Edit a file name inside the folder
+                    return {
+                        ...item,
+                        files: item.files.map((file, index) => {
+                            const fileId = `${item.id}-${index}`;
+                            return fileId === editing.id ? editValue : file;
+                        }),
+                    };
+                }
+                return item; // Return the unchanged item
+            })
+        );
+    
+        // Clear editing state
+        setEditing(null);
+        setEditValue("");
     };
+    
 
     const handleFocus = (id) => {
         setFocusedItem(id);
@@ -79,11 +69,41 @@ const Evaluation = () => {
         }
     };
 
-    const addFile = (folderId) => {
-        if (!folderId) {
-            alert("Please select a folder to add the file.");
-            return;
+    const deleteFile = (itemId) => {
+        setData((prevData) => {
+            // Check if the item is a folder
+            if (prevData.some((item) => item.id === itemId)) {
+                // Remove the folder
+                return prevData.filter((item) => item.id !== itemId);
+            }
+    
+            // Otherwise, check if it's a file within a folder
+            return prevData.map((folder) => {
+                if (folder.files.some((_, index) => `${folder.id}-${index}` === itemId)) {
+                    // Remove the file from the files array
+                    return {
+                        ...folder,
+                        files: folder.files.filter((_, index) => `${folder.id}-${index}` !== itemId),
+                    };
+                }
+                return folder;
+            });
+        });
+    
+        // Clear focus if the deleted item was focused
+        if (focusedItem === itemId) {
+            setFocusedItem(null);
         }
+    };
+    
+
+    // const deleteFile = ()=>{}
+
+    const addFile = (folderId) => {
+        // if (!folderId) {
+        //     alert("Please select a folder to add the file.");
+        //     return;
+        // }
 
         const folder = data.find((item) => item.id === folderId);
 
@@ -111,6 +131,13 @@ const Evaluation = () => {
                     <h1 className="uppercase px-2">Evaluation</h1>
                 </div>
                 <div className="flex">
+                <span
+                        className=" cursor-pointer"
+                        title="Add File"
+                        onClick={() => deleteFile(focusedItem)}
+                    >
+                        <MdDeleteOutline size={25} />
+                    </span>
                     <span
                         className="px-2 cursor-pointer"
                         title="Add File"
