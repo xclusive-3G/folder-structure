@@ -38,7 +38,7 @@ const Folder = ({ folder, isExpanded, focusedItem, onExpand, onEdit, onFocus, ed
                 folder.files.map((file, index) => (
                     <File
                         key={index}
-                        file={file}
+                        file={file.name}
                         folderId={folder.id}
                         index={index}
                         focusedItem={focusedItem}

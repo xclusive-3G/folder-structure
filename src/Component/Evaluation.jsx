@@ -8,6 +8,7 @@ const Evaluation = () => {
     const [editing, setEditing] = useState(null);
     const [editValue, setEditValue] = useState("");
     const [focusedItem, setFocusedItem] = useState(null);
+    const [data,setData] =useState(null)
 
     const toggleExpand = (id) => {
         setExpandedFolders((prev) =>
@@ -28,22 +29,28 @@ const Evaluation = () => {
 
 
     useEffect(()=>{
-        console.log('use effect run')
+        fetch('http://localhost:8000/folders')
+        .then(res=>{
+            return res.json();
+        }).then(data=>{
+            console.log(data)
+            setData(data)
+        })
     },[])
-    const data = [
-        {
-            id: 1,
-            name: 'Desktop',
-            type: 'folder',
-            files: ['screenshot.png', 'document.docx']
-        },
-        {
-            id: 2,
-            name: 'Downloads',
-            type: 'folder',
-            files: ['image.jpg', 'video.mp4']
-        }
-    ];
+    // const data = [
+    //     {
+    //         id: 1,
+    //         name: 'Desktop',
+    //         type: 'folder',
+    //         files: ['screenshot.png', 'document.docx']
+    //     },
+    //     {
+    //         id: 2,
+    //         name: 'Downloads',
+    //         type: 'folder',
+    //         files: ['image.jpg', 'video.mp4']
+    //     }
+    // ];
 
     return (
         <div className='bg-gray-800 text-gray-200 p-4 w-full h-screen'>
@@ -57,7 +64,7 @@ const Evaluation = () => {
                 </div>
             </div>
             <div className='border-t-[1px] border-l-[1px] w-full h-screen border-gray-500'>
-                {data.map((folder) => (
+                {data&&data.map((folder) => (
                     <Folder
                         key={folder.id}
                         folder={folder}
