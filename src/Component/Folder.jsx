@@ -15,7 +15,7 @@ const Folder = ({ folder, isExpanded, focusedItem, onExpand, onEdit, onFocus, ed
                     setEditValue(folder.name);
                 }}
                 className={`flex items-center p-1 hover:bg-gray-700 hover:text-white cursor-pointer 
-                            ${focusedItem === folder.id ? 'bg-blue-600' : ''}`}
+                            ${focusedItem === folder.id ? 'bg-gray-600' : ''}`}
             >
                 <span className="cursor-pointer">
                     {isExpanded ? <FaAngleDown size={20} /> : <FaAngleRight size={20} />}

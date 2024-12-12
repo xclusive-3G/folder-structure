@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 const File = ({ file, folderId, index, focusedItem, editing, editValue, setEditing, setEditValue, saveEdit, onFocus }) => {
@@ -5,7 +6,7 @@ const File = ({ file, folderId, index, focusedItem, editing, editValue, setEditi
     return (
         <div
             className={`ml-6 py-1 px-2 hover:bg-gray-700 cursor-pointer 
-                        ${focusedItem === fileId ? 'bg-blue-600' : ''}`}
+                        ${focusedItem === fileId ? 'bg-gray-700' : ''}`}
             onClick={() => onFocus(fileId)}
             onDoubleClick={() => {
                 setEditing({ type: 'file', id: fileId });
