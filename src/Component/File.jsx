@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaReact, FaJs, FaPlayCircle, FaFilePdf, FaFileAudio, FaFileAlt, FaFile } from 'react-icons/fa';
+import { FaReact, FaJs, FaPlayCircle, FaFilePdf, FaFileAudio, FaFileAlt } from 'react-icons/fa';
 import { BsFiletypeHtml } from "react-icons/bs";
 import { FaImage } from "react-icons/fa6";
 import { CiTextAlignLeft } from "react-icons/ci";
