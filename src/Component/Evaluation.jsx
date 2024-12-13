@@ -23,31 +23,25 @@ const Evaluation = () => {
     };
 
 
-    // function to save edited data
     const saveEdit = () => {
         // Ensure there's an item being edited
         if (!editing || !editValue) return;
 
-
-        // change the data state
-        setData((prevData) =>
-            prevData.map((item) => {
-                if (editing.type === 'folder' && item.id === editing.id) {
-                    // Edit the folder name
+        setData((prevData) => {
+            return prevData.map((item) => {
+                if (editing.type === "folder" && item.id === editing.id) {
+                    // Edit folder name
                     return { ...item, name: editValue };
-                } else if (editing.type === 'file') {
-                    // Edit a file name inside the folder
-                    return {
-                        ...item,
-                        files: item.files.map((file, index) => {
-                            const fileId = `${item.id}-${index}`;
-                            return fileId === editing.id ? editValue : file;
-                        }),
-                    };
+                } else if (editing.type === "file" && item.files) {
+                    // Edit file name inside a folder
+                    item.files = item.files.map((file, index) => {
+                        const fileId = `${item.id}-${index}`;
+                        return fileId === editing.id ? editValue : file;
+                    });
                 }
-                return item; // Return the unchanged item
-            })
-        );
+                return item;
+            });
+        });
 
         // Clear editing state
         setEditing(null);
@@ -62,7 +56,7 @@ const Evaluation = () => {
     const addFolder = (folderId) => {
         const folderName = prompt("Enter new folder name:");
         if (!folderName) return; // Exit if no folder name is provided
-    
+
         // Recursive function to add folder inside selected folder
         const addFolderToSelectedFolder = (folders, folderId) => {
             return folders.map((folder) => {
@@ -80,7 +74,7 @@ const Evaluation = () => {
                         ],
                     };
                 }
-    
+
                 // If the folder has nested folders, recurse through them
                 if (folder.type === "folder" && Array.isArray(folder.files)) {
                     return {
@@ -88,11 +82,11 @@ const Evaluation = () => {
                         files: addFolderToSelectedFolder(folder.files, folderId),
                     };
                 }
-    
+
                 return folder;
             });
         };
-    
+
         setData((prevData) => {
             if (!folderId) {
                 // If no folder is selected, add at the root level
@@ -106,9 +100,6 @@ const Evaluation = () => {
             }
         });
     };
-    
-
-
 
 
     const deleteFile = (itemId) => {
@@ -118,6 +109,21 @@ const Evaluation = () => {
                 // Remove the folder
                 return prevData.filter((item) => item.id !== itemId);
             }
+    const deleteItemRecursively = (items) => {
+        return items.filter((item) => {
+            // If the item is the one to delete, return false (remove it)
+            if (item.id === itemId) {
+                return false;
+            }
+
+            // If the item is a folder, check if it contains nested files or folders
+            if (item.files && Array.isArray(item.files)) {
+                item.files = deleteItemRecursively(item.files); // Recursively delete nested files/folders
+            }
+
+            return true; // Keep the item if it doesn't match the itemId
+        });
+    };
 
             // Otherwise, check if it's a file within a folder
             return prevData.map((folder) => {
@@ -137,15 +143,13 @@ const Evaluation = () => {
             setFocusedItem(null);
         }
     };
+    
+
 
 
     // const deleteFile = ()=>{}
 
     const addFile = (folderId) => {
-        // if (!folderId) {
-        //     alert("Please select a folder to add the file.");
-        //     return;
-        // }
 
         const folder = data.find((item) => item.id === folderId);
 
@@ -174,12 +178,13 @@ const Evaluation = () => {
                 </div>
                 <div className="flex">
                     <span
-                        className=" cursor-pointer"
-                        title="Add File"
-                        onClick={() => deleteFile(focusedItem)}
+                        className="cursor-pointer"
+                        title="Delete"
+                        onClick={() => deleteFile(focusedItem)} // Pass the focusedItem to the delete function
                     >
                         <MdDeleteOutline size={25} />
                     </span>
+
                     <span
                         className="px-2 cursor-pointer"
                         title="Add File"
