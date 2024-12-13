@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FiFilePlus } from "react-icons/fi";
 import { CgFolderAdd } from "react-icons/cg";
 import { MdDeleteOutline } from "react-icons/md";
@@ -22,11 +22,11 @@ const Evaluation = () => {
         );
     };
 
-    
+
     // function to save edited data
     const saveEdit = () => {
         // Ensure there's an item being edited
-        if (!editing || !editValue) return; 
+        if (!editing || !editValue) return;
 
 
         // change the data state
@@ -48,26 +48,68 @@ const Evaluation = () => {
                 return item; // Return the unchanged item
             })
         );
-    
+
         // Clear editing state
         setEditing(null);
         setEditValue("");
     };
-    
+
 
     const handleFocus = (id) => {
         setFocusedItem(id);
     };
 
-    const addFolder = () => {
+    const addFolder = (folderId) => {
         const folderName = prompt("Enter new folder name:");
-        if (folderName) {
-            setData((prevData) => [
-                ...prevData,
-                { id: Date.now().toString(), name: folderName, type: "folder", files: [] },
-            ]);
-        }
+        if (!folderName) return; // Exit if no folder name is provided
+    
+        // Recursive function to add folder inside selected folder
+        const addFolderToSelectedFolder = (folders, folderId) => {
+            return folders.map((folder) => {
+                if (folder.id === folderId && folder.type === "folder") {
+                    return {
+                        ...folder,
+                        files: [
+                            ...folder.files,
+                            {
+                                id: Date.now().toString(),
+                                name: folderName,
+                                type: "folder",
+                                files: [], // New folder with no files initially
+                            },
+                        ],
+                    };
+                }
+    
+                // If the folder has nested folders, recurse through them
+                if (folder.type === "folder" && Array.isArray(folder.files)) {
+                    return {
+                        ...folder,
+                        files: addFolderToSelectedFolder(folder.files, folderId),
+                    };
+                }
+    
+                return folder;
+            });
+        };
+    
+        setData((prevData) => {
+            if (!folderId) {
+                // If no folder is selected, add at the root level
+                return [
+                    ...prevData,
+                    { id: Date.now().toString(), name: folderName, type: "folder", files: [] },
+                ];
+            } else {
+                // Add folder inside the selected folder
+                return addFolderToSelectedFolder(prevData, folderId);
+            }
+        });
     };
+    
+
+
+
 
     const deleteFile = (itemId) => {
         setData((prevData) => {
@@ -76,7 +118,7 @@ const Evaluation = () => {
                 // Remove the folder
                 return prevData.filter((item) => item.id !== itemId);
             }
-    
+
             // Otherwise, check if it's a file within a folder
             return prevData.map((folder) => {
                 if (folder.files.some((_, index) => `${folder.id}-${index}` === itemId)) {
@@ -89,13 +131,13 @@ const Evaluation = () => {
                 return folder;
             });
         });
-    
+
         // Clear focus if the deleted item was focused
         if (focusedItem === itemId) {
             setFocusedItem(null);
         }
     };
-    
+
 
     // const deleteFile = ()=>{}
 
@@ -108,7 +150,7 @@ const Evaluation = () => {
         const folder = data.find((item) => item.id === folderId);
 
         if (folder && folder.type === "folder") {
-            
+
             const fileName = prompt("Enter new file name:");
             if (fileName) {
                 setData((prevData) =>
@@ -131,7 +173,7 @@ const Evaluation = () => {
                     <h1 className="uppercase px-2">Evaluation</h1>
                 </div>
                 <div className="flex">
-                <span
+                    <span
                         className=" cursor-pointer"
                         title="Add File"
                         onClick={() => deleteFile(focusedItem)}
@@ -149,7 +191,7 @@ const Evaluation = () => {
                     <span
                         className="cursor-pointer"
                         title="Add Folder"
-                        onClick={addFolder}
+                        onClick={() => addFolder(focusedItem)}
                     >
                         <CgFolderAdd size={25} />
                     </span>
@@ -164,7 +206,7 @@ const Evaluation = () => {
                             isExpanded={expandedFolders.includes(folder.id)}
                             focusedItem={focusedItem}
                             onExpand={toggleExpand}
-                            onEdit={() => {}}
+                            onEdit={() => { }}
                             onFocus={handleFocus}
                             editing={editing}
                             editValue={editValue}
