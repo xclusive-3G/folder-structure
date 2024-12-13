@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaFileImage, FaFileVideo, FaFilePdf, FaFileAudio, FaFileAlt, FaFile } from 'react-icons/fa';
+import { FaReact, FaJs, FaFileVideo, FaFilePdf, FaFileAudio, FaFileAlt, FaFile } from 'react-icons/fa';
 import { FaImage } from "react-icons/fa6";
 
 // Function to get the file extension
@@ -15,20 +15,24 @@ const getFileIcon = (fileName) => {
         case 'jpg':
         case 'jpeg':
         case 'png':
-            return <FaImage size={20} color="dodgerblue"/>;
+            return <FaImage size={20} color="dodgerblue" />;
         case 'mp4':
-            return <FaFileVideo size={20} color="darkorange"/>;
+            return <FaFileVideo size={20} color="darkorange" />;
         case 'pdf':
             return <FaFilePdf size={20} color="red" />;
         case 'mp3':
         case 'wav':
-            return <FaFileAudio size={20} color="mediumseagreen"/>;
+            return <FaFileAudio size={20} color="mediumseagreen" />;
         case 'txt':
         case 'doc':
         case 'docx':
-            return <FaFileAlt size={20} color="gray"/>;
+            return <FaFileAlt size={20} color="gray" />;
+        case 'jsx':
+            return <FaReact />;
+        case 'js':
+            return <FaJs />;
         default:
-            return <FaFile size={20} color="black"/>; // Default file icon
+            return <FaFile size={20} color="black" />; // Default file icon
     }
 };
 

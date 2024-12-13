@@ -66,7 +66,6 @@ const Evaluation = () => {
                         files: [
                             ...folder.files,
                             {
-                                id: Date.now().toString(),
                                 name: folderName,
                                 type: "folder",
                                 files: [], // New folder with no files initially
