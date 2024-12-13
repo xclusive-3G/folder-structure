@@ -11,9 +11,10 @@ const Evaluation = () => {
     const [editValue, setEditValue] = useState("");
     const [focusedItem, setFocusedItem] = useState(null);
 
-    // Initial State
+    // state to store the folder data
     const [data, setData] = useState(fileData);
 
+    // fuction to toggle folder
     const toggleExpand = (id) => {
         setExpandedFolders((prev) =>
             prev.includes(id)
@@ -22,7 +23,7 @@ const Evaluation = () => {
         );
     };
 
-
+    // function to save edited data
     const saveEdit = () => {
         // Ensure there's an item being edited
         if (!editing || !editValue) return;
@@ -48,11 +49,12 @@ const Evaluation = () => {
         setEditValue("");
     };
 
-
+    // fuction to save data when the mose is not on the folder div
     const handleFocus = (id) => {
         setFocusedItem(id);
     };
 
+    //  fuction ro add folder
     const addFolder = (folderId) => {
         const folderName = prompt("Enter new folder name:");
         if (!folderName) return; // Exit if no folder name is provided
@@ -100,7 +102,7 @@ const Evaluation = () => {
         });
     };
 
-
+    // function to delete data file
     const deleteFile = (itemId) => {
         setData((prevData) => {
             // Check if the item is a folder
@@ -146,7 +148,7 @@ const Evaluation = () => {
 
 
 
-    // const deleteFile = ()=>{}
+    // function to add file to folder
 
     const addFile = (folderId) => {
 
@@ -175,6 +177,7 @@ const Evaluation = () => {
                 <div className="flex items-center">
                     <h1 className="uppercase px-2">Evaluation</h1>
                 </div>
+                {/* div for delete,file amd folder icons */}
                 <div className="flex">
                     <span
                         className="cursor-pointer"
@@ -201,9 +204,11 @@ const Evaluation = () => {
                     </span>
                 </div>
             </div>
+            {/* div to dispaly data gotten from used state */}
             <div className="border-t-[1px] border-l-[1px] w-full h-screen border-gray-500">
                 {data &&
                     data.map((folder) => (
+                        // pass props to folder component
                         <Folder
                             key={folder.id}
                             folder={folder}

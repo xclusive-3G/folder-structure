@@ -1,6 +1,8 @@
 import React from 'react';
-import { FaReact, FaJs, FaFileVideo, FaFilePdf, FaFileAudio, FaFileAlt, FaFile } from 'react-icons/fa';
+import { FaReact, FaJs, FaPlayCircle, FaFilePdf, FaFileAudio, FaFileAlt, FaFile } from 'react-icons/fa';
+import { BsFiletypeHtml } from "react-icons/bs";
 import { FaImage } from "react-icons/fa6";
+import { CiTextAlignLeft } from "react-icons/ci";
 
 // Function to get the file extension
 const getFileExtension = (fileName) => {
@@ -17,7 +19,7 @@ const getFileIcon = (fileName) => {
         case 'png':
             return <FaImage size={20} color="dodgerblue" />;
         case 'mp4':
-            return <FaFileVideo size={20} color="darkorange" />;
+            return <FaPlayCircle size={20} color="red" />;
         case 'pdf':
             return <FaFilePdf size={20} color="red" />;
         case 'mp3':
@@ -31,8 +33,10 @@ const getFileIcon = (fileName) => {
             return <FaReact />;
         case 'js':
             return <FaJs />;
+        case 'html':
+            return <BsFiletypeHtml />
         default:
-            return <FaFile size={20} color="black" />; // Default file icon
+            return <CiTextAlignLeft size={20} color="white" />; // Default file icon to vlack
     }
 };
 
