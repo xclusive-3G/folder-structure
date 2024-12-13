@@ -110,21 +110,21 @@ const Evaluation = () => {
                 // Remove the folder
                 return prevData.filter((item) => item.id !== itemId);
             }
-    const deleteItemRecursively = (items) => {
-        return items.filter((item) => {
-            // If the item is the one to delete, return false (remove it)
-            if (item.id === itemId) {
-                return false;
-            }
+    // const deleteItemRecursively = (items) => {
+    //     return items.filter((item) => {
+    //         // If the item is the one to delete, return false (remove it)
+    //         if (item.id === itemId) {
+    //             return false;
+    //         }
 
-            // If the item is a folder, check if it contains nested files or folders
-            if (item.files && Array.isArray(item.files)) {
-                item.files = deleteItemRecursively(item.files); // Recursively delete nested files/folders
-            }
+    //         // If the item is a folder, check if it contains nested files or folders
+    //         if (item.files && Array.isArray(item.files)) {
+    //             item.files = deleteItemRecursively(item.files); // Recursively delete nested files/folders
+    //         }
 
-            return true; // Keep the item if it doesn't match the itemId
-        });
-    };
+    //         return true; // Keep the item if it doesn't match the itemId
+    //     });
+    // };
 
             // Otherwise, check if it's a file within a folder
             return prevData.map((folder) => {
